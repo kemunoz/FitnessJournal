@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
+import { Context } from '../context/FitnessContext';
 
-const IndexScreen = () => {
+const IndexScreen = ({ navigation }) => {
     const [user, setUser] = useState('');
     const [password, setPassword] = useState('');
-    const [retypedpassword, setPasswordCheck] = useState('');
+    const { login } = useContext(Context);
 
     return (
         <View>
@@ -20,16 +21,10 @@ const IndexScreen = () => {
                 onChangeText={text => setPassword(text)}
                 style={styles.input}
             />
-            <Text style={styles.label}>Re-Type Password:</Text>
-            <TextInput
-                value={retypedpassword}
-                onChangeText={text => setPasswordCheck(text)}
-                style={styles.input}
-            />
 
             <Button
                 title="Log In"
-                onPress={() => retypedpassword === password ? console.log(true) : console.log(false)}
+                onPress={() => login(user, password, () => navigation.navigate('Home'))}
             />
             <Button
                 title="Sign up"
