@@ -5,7 +5,7 @@ const userReducer = (state, action) => {
         case 'LOGIN':
             return {
                 userid: action.userpayload.id,
-                webtoken: null,
+                webtoken: action.userpayload.token,
                 workouts: []
             }
         default:
@@ -30,14 +30,12 @@ const login = dispatch => {
             });
 
             let json = await response.json();
-            let { message, payload } = json;
-            console.log(message);
-            console.log(payload);
+            let { message, payload, token } = json;
             switch (message) {
                 case 'USER_NOT_FOUND':
                     null;
                 case 'LOGGED_IN':
-                    dispatch({ userpayload: { id: payload.id, username }, type: 'LOGIN' });
+                    dispatch({ userpayload: { id: payload.id, username, token }, type: 'LOGIN' });
                 default:
                     null;
             }
