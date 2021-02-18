@@ -14,17 +14,21 @@ const IndexScreen = ({ navigation }) => {
                 value={user}
                 onChangeText={(text) => setUser(text)}
                 style={styles.input}
+                autoCorrect={false}
+                autoCapitalize="none"
             />
             <Text style={styles.label}>Enter Password:</Text>
             <TextInput
                 value={password}
                 onChangeText={text => setPassword(text)}
                 style={styles.input}
+                autoCorrect={false}
+                autoCapitalize="none"
             />
 
             <Button
                 title="Log In"
-                onPress={() => login(user, password, () => navigation.navigate('Home'))}
+                onPress={() => login(user, password)}
             />
             <Button
                 title="Sign up"
