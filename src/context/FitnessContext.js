@@ -15,7 +15,7 @@ const userReducer = (state, action) => {
 
 
 const login = dispatch => {
-    return async (username, password) => {
+    return async (username, password, callback) => {
         try {
             let response = await fetch('http://localhost:3000/user/login', {
                 method: 'POST',
@@ -33,9 +33,10 @@ const login = dispatch => {
             let { message, payload, token } = json;
             switch (message) {
                 case 'USER_NOT_FOUND':
-                    null;
+                    callback(false, 'Error', message);
                 case 'LOGGED_IN':
                     dispatch({ userpayload: { id: payload.id, username, token }, type: 'LOGIN' });
+                    callback(true, null, null);
                 default:
                     null;
             }

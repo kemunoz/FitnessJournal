@@ -1,11 +1,30 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Button, Alert } from 'react-native';
 import { Context } from '../context/FitnessContext';
 
 const IndexScreen = ({ navigation }) => {
     const [user, setUser] = useState('');
     const [password, setPassword] = useState('');
     const { login } = useContext(Context);
+
+    const isLoggedIn = (bool, message, alertTitle) => {
+        bool ? navigation.navigate('Home') :
+            Alert.alert(
+                alertTitle,
+                message,
+                [
+                    {
+                        text: 'Cancel',
+                        onPress: null,
+                        style: 'cancel'
+                    },
+                    {
+                        text: 'Ok',
+                        onPress: null
+                    }
+                ]
+            );
+    }
 
     return (
         <View>
@@ -28,7 +47,7 @@ const IndexScreen = ({ navigation }) => {
 
             <Button
                 title="Log In"
-                onPress={() => login(user, password)}
+                onPress={() => login(user, password, isLoggedIn)}
             />
             <Button
                 title="Sign up"
