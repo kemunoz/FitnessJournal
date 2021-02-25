@@ -1,13 +1,12 @@
-import React, { useContext } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { View, Text, StyleSheet, Button } from 'react-native';
 import { Context } from '../context/FitnessContext';
 
-const HomePage = () => {
-    const { state } = useContext(Context);
+const HomePage = ({ navigation }) => {
 
+    const { getWorkouts, state } = useContext(Context);
     return <View>
-        <Text>Hello</Text>
-        <Text>{state.userid}</Text>
+        <Button title='Workouts' onPress={() => { getWorkouts(state.userid, state.token, () => navigation.navigate('Workout')) }} />
     </View>
 }
 

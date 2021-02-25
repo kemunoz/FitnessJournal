@@ -5,9 +5,11 @@ const userReducer = (state, action) => {
         case 'LOGIN':
             return {
                 userid: action.userpayload.id,
-                webtoken: action.userpayload.token,
+                token: action.userpayload.token,
                 workouts: []
             }
+        case 'WORKOUT':
+            return { ...state, workout: action.payload.workout }
         default:
             return state;
     }
@@ -17,7 +19,7 @@ const userReducer = (state, action) => {
 const login = dispatch => {
     return async (username, password, callback) => {
         try {
-            let response = await fetch('http://localhost:3000/user/login', {
+            let response = await fetch('http://192.168.1.73:3000/user/login', {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
@@ -32,6 +34,8 @@ const login = dispatch => {
             let json = await response.json();
             let { message, payload, token } = json;
             switch (message) {
+                case 'USERNAME_OR_PASSWORD_INCORRECT':
+                    callback(false, 'Error', message);
                 case 'USER_NOT_FOUND':
                     callback(false, 'Error', message);
                 case 'LOGGED_IN':
@@ -46,4 +50,30 @@ const login = dispatch => {
     }
 };
 
-export const { Context, Provider } = createDataContext(userReducer, { login }, {});
+const getWorkouts = dispatch => {
+    return async (id, token, callback) => {
+        try {
+            let response = await fetch(`http://localhost:3000/workout/${id}`, {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }).json();
+            let { workouts } = response;
+            let map = workouts.map((plan) => {
+                return {
+                    title: plan.title,
+                    summary: plan.summary,
+                    exercises: plan.exercises
+                }
+            });
+            dispatch({ payload: { workout: map }, type: 'WORKOUT' });
+            callback();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+
+export const { Context, Provider } = createDataContext(userReducer, { login, getWorkouts }, {});
